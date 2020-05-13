@@ -19,8 +19,7 @@ data "signalfx_azure_services" "azure_services" {
 # Leaves out most of the integration bits, see the docs
 # for signalfx_azure_integration for more
 resource "signalfx_azure_integration" "azure_myteam" {
-   # …
-
+  
    # All supported services!
    services = data.signalfx_azure_services.azure_services.services.*.name
 }

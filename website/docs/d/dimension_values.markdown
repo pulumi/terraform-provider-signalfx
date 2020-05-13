@@ -25,17 +25,17 @@ data "signalfx_dimension_values" "hosts" {
 }
 
 resource "signalfx_time_chart" "host_charts" {
-		for_each = toset(data.signalfx_dimension_values.hosts.values)
+	for_each = toset(data.signalfx_dimension_values.hosts.values)
 
     name = "CPU Total Idle ${each.value}"
 
-		plot_type = "ColumnChart"
-		axes_include_zero = true
-		color_by = "Metric"
+	plot_type = "ColumnChart"
+	axes_include_zero = true
+	color_by = "Metric"
 
     program_text = <<-EOF
 A = data("cpu.idle", filter('host', '${each.key}').publish(label="CPU")
-        EOF
+EOF
 }
 
 resource "signalfx_dashboard" "mydashboard1" {
@@ -44,11 +44,11 @@ resource "signalfx_dashboard" "mydashboard1" {
 
     time_range = "-30m"
 
-		grid {
-			chart_ids = toset([for v in signalfx_time_chart.host_charts: v.id ])
-			width = 3
-			height = 1
-		}
+    grid {
+        chart_ids = toset([for v in signalfx_time_chart.host_charts: v.id ])
+        width = 3
+        height = 1
+    }
 }
 ```
 

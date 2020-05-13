@@ -8,13 +8,13 @@ description: |-
 
 # Resource: signalfx_detector
 
-Provides a SignalFx detector resource. This can be used to create and manage detectors.
+Provides a SignalFx detector resource. This can be used to create and manage detectors. As SignalFx supports different notification mechanisms a comma-delimited string is used to provide inputs. If you'd like to specify multiple notifications, then each should be a member in the list.
 
 ~> **NOTE** If you're interested in using SignalFx detector features such as Historical Anomaly, Resource Running Out, or others then consider building them in the UI first then using the "Show SignalFlow" feature to extract the value for `program_text`. You may also consult the [documentation for detector functions in signalflow-library](https://github.com/signalfx/signalflow-library/tree/master/library/signalfx/detectors).
 
 ## Example Usage
 
-```terraform
+```
 resource "signalfx_detector" "application_delay" {
     count = length(var.clusters)
 
@@ -23,7 +23,7 @@ resource "signalfx_detector" "application_delay" {
     max_delay = 30
 
     # Note that if you use these features, you must use a user's
-    # admin key to authenticate the provider, lest Terraform not be able
+    # admin key to authenticate the provider
     # to modify the detector in the future!
     authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
     authorized_writer_users = [ "abc123" ]
@@ -54,28 +54,37 @@ variable "clusters" {
 }
 ```
 
-## Notification Format
-
-As SignalFx supports different notification mechanisms a comma-delimited string is used to provide inputs. If you'd like to specify multiple notifications, then each should be a member in the list, like so:
-
-```
-notifications = ["Email,foo-alerts@example.com", "Slack,credentialId,channel"]
-```
-
-This will likely be changed in a future iteration of the provider. See [SignalFx Docs](https://developers.signalfx.com/detectors_reference.html#operation/Create%20Single%20Detector) for more information. For now, here are some example of how to configure each notification type:
-
-### Email
-
-```
-notifications = ["Email,foo-alerts@bar.com"]
-```
-
 ### Jira
 
 Note that the `credentialId` is the SignalFx-provided ID shown after setting up your Jira integration. (See also `signalfx_jira_integration`.)
 
 ```
-notifications = ["Jira,credentialId"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["Jira,credentialId"]
+    }
+}
+
 ```
 
 ### Opsgenie
@@ -83,13 +92,61 @@ notifications = ["Jira,credentialId"]
 Note that the `credentialId` is the SignalFx-provided ID shown after setting up your Opsgenie integration. `Team` here is hardcoded as the `responderType` as that is the only acceptable type as per the API docs.
 
 ```
-notifications = ["Opsgenie,credentialId,responderName,responderId,Team"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["Opsgenie,credentialId,responderName,responderId,Team"]
+    }
+}
 ```
 
 ### PagerDuty
 
 ```
-notifications = ["PagerDuty,credentialId"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["PagerDuty,credentialId"]
+    }
+}
 ```
 
 ### Slack
@@ -97,7 +154,31 @@ notifications = ["PagerDuty,credentialId"]
 Exclude the `#` on the channel name!
 
 ```
-notifications = ["Slack,credentialId,channel"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["Slack,credentialId,channel"]
+    }
+}
 ```
 
 ### Team
@@ -105,7 +186,31 @@ notifications = ["Slack,credentialId,channel"]
 Sends [notifications to a team](https://docs.signalfx.com/en/latest/managing/teams/team-notifications.html).
 
 ```
-notifications = ["Team,teamId"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["Team,teamId"]
+    }
+}
 ```
 
 ### Team
@@ -113,13 +218,61 @@ notifications = ["Team,teamId"]
 Sends an email to every member of a team.
 
 ```
-notifications = ["TeamEmail,teamId"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["TeamEmail,teamId"]
+    }
+}
 ```
 
 ### VictorOps
 
 ```
-notifications = ["VictorOps,credentialId,routingKey"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["VictorOps,credentialId,routingKey"]
+    }
+}
 ```
 
 ### Webhook
@@ -128,12 +281,60 @@ notifications = ["VictorOps,credentialId,routingKey"]
 
 You can either configure a Webhook to use an existing integration's credential id:
 ```
-notifications = ["Webhook,credentialId,,"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["Webhook,credentialId,x,"]
+    }
+}
 ```
 
 or configure one inline:
 ```
-notifications = ["Webhook,,secret,url"]
+resource "signalfx_detector" "application_delay" {
+    count = length(var.clusters)
+
+    name = " max average delay - ${var.clusters[count.index]}"
+    description = "your application is slow - ${var.clusters[count.index]}"
+    max_delay = 30
+
+    # Note that if you use these features, you must use a user's
+    # admin key to authenticate the provider
+    # to modify the detector in the future!
+    authorized_writer_teams = [ signalfx_team.mycoolteam.id ]
+    authorized_writer_users = [ "abc123" ]
+
+    program_text = <<-EOF
+        signal = data('app.delay', filter('cluster','${var.clusters[count.index]}'), extrapolation='last_value', maxExtrapolations=5).max()
+        detect(when(signal > 60, '5m')).publish('Processing old messages 5m')
+        detect(when(signal > 60, '30m')).publish('Processing old messages 30m')
+    EOF
+    rule {
+        description = "maximum > 60 for 5m"
+        severity = "Warning"
+        detect_label = "Processing old messages 5m"
+        notifications = ["Webhook,,secret,url"]
+    }
+}
 ```
 
 ## Argument Reference

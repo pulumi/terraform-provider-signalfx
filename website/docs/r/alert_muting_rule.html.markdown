@@ -3,7 +3,7 @@ layout: "signalfx"
 page_title: "SignalFx: signalfx_alert_muting_rule"
 sidebar_current: "docs-signalfx-resource-alert-muting-rule"
 description: |-
-  Allows Terraform to create and manage SignalFx Alert Muting Rules
+  Allows creation and management of SignalFx Alert Muting Rules
 ---
 
 # Resource: signalfx_alert_muting_rule
@@ -14,7 +14,7 @@ Provides a SignalFx resource for managing alert muting rules. See [Mute Notifica
 
 ## Example Usage
 
-```terraform
+```
 resource "signalfx_alert_muting_rule" "rool_mooter_one" {
     description = "mooted it NEW"
 

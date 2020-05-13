@@ -12,7 +12,7 @@ This chart type displays the specified plot in a heatmap fashion. This format is
 
 ## Example Usage
 
-```terraform
+```
 resource "signalfx_heatmap_chart" "myheatmapchart0" {
     name = "CPU Total Idle - Heatmap"
 
@@ -40,7 +40,7 @@ resource "signalfx_heatmap_chart" "myheatmapchart0" {
 	color = "green"
     }
     color_scale {
-        lt = 99 # This ensures terraform recognizes that we cover the range 95-99
+        lt = 99 # This ensures we cover the range 95-99
         gte = 95
 	color = "yellow"
     }

@@ -14,7 +14,7 @@ In the SignalFx web UI, a [dashboard group](https://developers.signalfx.com/dash
 
 ## Example Usage
 
-```terraform
+```
 resource "signalfx_dashboard_group" "mydashboardgroup0" {
     name = "My team dashboard group"
     description = "Cool dashboard group"

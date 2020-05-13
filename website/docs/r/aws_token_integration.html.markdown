@@ -3,7 +3,7 @@ layout: "signalfx"
 page_title: "SignalFx: signalfx_aws_token_integration"
 sidebar_current: "docs-signalfx-resource-aws-token-integration"
 description: |-
-  Allows Terraform to create and manage SignalFx AWS Security Token Integrations
+  Allows creation and management of SignalFx AWS Security Token Integrations
 ---
 
 # Resource: signalfx_aws_external_integration
@@ -16,7 +16,7 @@ SignalFx AWS CloudWatch integrations using security tokens. For help with this i
 
 ## Example Usage
 
-```terraform
+```
 resource "signalfx_aws_token_integration" "aws_myteam_token" {
     name = "AWSFoo"
 }

@@ -12,8 +12,9 @@ Manage SignalFx [Data Links](https://docs.signalfx.com/en/latest/managing/data-l
 
 ## Example Usage
 
-```terraform
-# A global link to SignalFx dashboard.
+### Global link to a dashboard
+
+```
 resource "signalfx_data_link" "my_data_link" {
     property_name = "pname"
     property_value = "pvalue"
@@ -25,8 +26,11 @@ resource "signalfx_data_link" "my_data_link" {
 			dashboard_id = signalfx_dashboard.mydashboard0.id
     }
 }
+```
 
-# A dashboard-specific link to an external URL
+### Dashboard specific link to an external URL
+
+```
 resource "signalfx_data_link" "my_data_link_dash" {
 		context_dashboard_id = signalfx_dashboard.mydashboard0.id
     property_name = "pname2"

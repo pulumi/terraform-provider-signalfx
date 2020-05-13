@@ -3,7 +3,7 @@ layout: "signalfx"
 page_title: "SignalFx: signalfx_aws_external_integration"
 sidebar_current: "docs-signalfx-resource-aws-external-integration"
 description: |-
-  Allows Terraform to create and manage SignalFx AWS External ID Integrations
+  Allows creation and management of SignalFx AWS External ID Integrations
 ---
 
 # Resource: signalfx_aws_external_integration
@@ -16,7 +16,7 @@ SignalFx AWS CloudWatch integrations using Role ARNs. For help with this integra
 
 ## Example Usage
 
-```terraform
+```
 resource "signalfx_aws_external_integration" "aws_myteam_extern" {
    name = "AWSFooNEW"
 }

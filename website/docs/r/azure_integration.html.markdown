@@ -3,7 +3,7 @@ layout: "signalfx"
 page_title: "SignalFx: signalfx_azure_integration"
 sidebar_current: "docs-signalfx-resource-azure-integration"
 description: |-
-  Allows Terraform to create and manage SignalFx Azure Integrations
+  Allows creation and management of SignalFx Azure Integrations
 ---
 
 # Resource: signalfx_azure_integration
@@ -14,7 +14,7 @@ SignalFx Azure integrations. For help with this integration see [Monitoring Micr
 
 ## Example Usage
 
-```terraform
+```
 resource "signalfx_azure_integration" "azure_myteam" {
     name = "Azure Foo"
     enabled = true

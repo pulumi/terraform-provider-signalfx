@@ -3,7 +3,7 @@ layout: "signalfx"
 page_title: "SignalFx: signalfx_aws_integration"
 sidebar_current: "docs-signalfx-resource-aws-integration"
 description: |-
-  Allows Terraform to create and manage SignalFx AWS Integrations
+  Allows creation and management of SignalFx AWS Integrations
 ---
 
 # Resource: signalfx_aws_integration
@@ -16,7 +16,7 @@ SignalFx AWS CloudWatch integrations. For help with this integration see [Monito
 
 ## Example Usage
 
-```terraform
+```
 // This resource returns an account id in `external_id`…
 resource "signalfx_aws_external_integration" "aws_myteam_external" {
     name = "AWSFoo"
