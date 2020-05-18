@@ -213,7 +213,7 @@ resource "signalfx_detector" "application_delay" {
 }
 ```
 
-### Team
+### TeamEmail
 
 Sends an email to every member of a team.
 
