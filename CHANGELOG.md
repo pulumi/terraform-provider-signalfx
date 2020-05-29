@@ -1,3 +1,10 @@
+## 4.22.0 (May 29, 2020)
+
+IMPROVEMENTS:
+* provider: HTTP logging is now enabled in debug mode. Thanks [@pdecat](https://github.com/pdecat)! [#211](https://github.com/terraform-providers/terraform-provider-signalfx/pull/211)
+* provider: Allow API URL and Custom App URL to be set from environment variables. Thanks [@pdecat](https://github.com/pdecat)! [#213](https://github.com/terraform-providers/terraform-provider-signalfx/pull/213)
+* resource/gcp_integration: Add support for compute metadata whitelist. Thanks [@pdecat](https://github.com/pdecat)! [#212](https://github.com/terraform-providers/terraform-provider-signalfx/pull/212)
+
 ## 4.21.0 (May 18, 2020)
 
 IMPROVEMENTS:
