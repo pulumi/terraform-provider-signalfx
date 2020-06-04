@@ -1,3 +1,8 @@
+## 4.23.0 (June 02, 2020)
+
+IMPROVEMENTS:
+* provider: AWS, Azure, and GCP integrations now have an undocumented `named_token` argument. [#214](https://github.com/terraform-providers/terraform-provider-signalfx/pull/214)
+
 ## 4.22.0 (May 29, 2020)
 
 IMPROVEMENTS:
