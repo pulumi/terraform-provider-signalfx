@@ -16,11 +16,7 @@ SignalFx AWS CloudWatch integrations using security tokens. For help with this i
 
 ## Example Usage
 
-<<<<<<< HEAD
 ```
-=======
-```tf
->>>>>>> v4.23.1
 resource "signalfx_aws_token_integration" "aws_myteam_token" {
   name = "AWSFoo"
 }
