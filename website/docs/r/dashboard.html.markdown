@@ -16,30 +16,30 @@ A dashboard is a curated collection of specific charts and supports dimensional 
 
 ```
 resource "signalfx_dashboard" "mydashboard0" {
-    name = "My Dashboard"
-    dashboard_group = signalfx_dashboard_group.mydashboardgroup0.id
+  name            = "My Dashboard"
+  dashboard_group = signalfx_dashboard_group.mydashboardgroup0.id
 
-    time_range = "-30m"
+  time_range = "-30m"
 
-    filter {
-        property = "collector"
-        values = ["cpu", "Diamond"]
-    }
-    variable {
-        property = "region"
-        alias = "region"
-        values = ["uswest-1-"]
-    }
-    chart {
-        chart_id = signalfx_time_chart.mychart0.id
-        width = 12
-        height = 1
-    }
-    chart {
-        chart_id = signalfx_time_chart.mychart1.id
-        width = 5
-        height = 2
-    }
+  filter {
+    property = "collector"
+    values   = ["cpu", "Diamond"]
+  }
+  variable {
+    property = "region"
+    alias    = "region"
+    values   = ["uswest-1-"]
+  }
+  chart {
+    chart_id = signalfx_time_chart.mychart0.id
+    width    = 12
+    height   = 1
+  }
+  chart {
+    chart_id = signalfx_time_chart.mychart1.id
+    width    = 5
+    height   = 2
+  }
 }
 ```
 
@@ -156,3 +156,57 @@ The following arguments are supported in the resource block:
 
 ## Dashboard Layout Information
 
+**Every SignalFx dashboard is shown as a grid of 12 columns and potentially infinite number of rows.** The dimension of the single column depends on the screen resolution.
+
+When you define a dashboard resource, you need to specify which charts (by `chart_id`) should be displayed in the dashboard, along with layout information determining where on the dashboard the charts should be displayed. You have to assign to every chart a **width** in terms of number of columns to cover up (from 1 to 12) and a **height** in terms of number of rows (more or equal than 1). You can also assign a position in the dashboard grid where you like the graph to stay. In order to do that, you assign a **row** that represents the topmost row of the chart and a **column** that represent the leftmost column of the chart. If by mistake, you wrote a configuration where there are not enough columns to accommodate your charts in a specific row, they will be split in different rows. In case a **row** was specified with value higher than 1, if all the rows above are not filled by other charts, the chart will be placed the **first empty row**.
+
+The are a bunch of use cases where this layout makes things too verbose and hard to work with loops. For those you can now use one of these two layouts: grids and columns.
+
+~> **WARNING** These other layouts are not supported by the SignalFx API and are purely Terraform-side constructs. As such the provider cannot import them and cannot properly reconcile API-side changes. In other words, if someone changes the charts in the UI it will not be reconciled at the next apply. Also, you may only use one of `chart`, `column`, or `grid` when laying out dashboards. You can, however, use multiple instances of each (e.g. multiple `grid`s) for fancy layout.
+
+### Grid
+
+The dashboard is divided into equal-sized charts (defined by `width` and `height`). If a chart does not fit in the same row (because the total width > max allowed by the dashboard), this and the next ones will be place in the next row(s).
+
+```tf
+resource "signalfx_dashboard" "grid_example" {
+  name            = "Grid"
+  dashboard_group = signalfx_dashboard_group.example.id
+  time_range      = "-15m"
+
+  grid {
+    chart_ids = [
+      concat(
+        signalfx_time_chart.rps.*.id,
+        signalfx_time_chart.p50ths.*.id,
+        signalfx_time_chart.p99ths.*.id,
+        signalfx_time_chart.idle_workers.*.id,
+        signalfx_time_chart.cpu_idle.*.id,
+      )
+    ]
+    width  = 3
+    height = 1
+  }
+}
+```
+
+### Column
+
+The dashboard is divided into equal-sized charts (defined by `width` and `height`). The charts are placed in the grid by column (column number is called `column`).
+
+```tf
+resource "signalfx_dashboard" "load" {
+  name            = "Load"
+  dashboard_group = signalfx_dashboard_group.example.id
+
+  column {
+    chart_ids = [signalfx_single_value_chart.rps.*.id]
+    width     = 2
+  }
+  column {
+    chart_ids = [signalfx_time_chart.cpu_capacity.*.id]
+    column    = 2
+    width     = 4
+  }
+}
+```

@@ -20,7 +20,7 @@ data "signalfx_aws_services" "aws_services" {
 # for signalfx_aws_integration for more
 resource "signalfx_aws_integration" "aws_myteam" {
    
-# All supported services!
+  # All supported services!
    services = data.signalfx_aws_services.aws_services.services.*.name
 }
 ```

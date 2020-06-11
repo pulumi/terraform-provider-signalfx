@@ -16,15 +16,15 @@ Manage SignalFx [Data Links](https://docs.signalfx.com/en/latest/managing/data-l
 
 ```
 resource "signalfx_data_link" "my_data_link" {
-    property_name = "pname"
-    property_value = "pvalue"
+  property_name  = "pname"
+  property_value = "pvalue"
 
-    target_signalfx_dashboard {
-      is_default = true
-      name = "sfx_dash"
-			dashboard_group_id = signalfx_dashboard_group.mydashboardgroup0.id
-			dashboard_id = signalfx_dashboard.mydashboard0.id
-    }
+  target_signalfx_dashboard {
+    is_default         = true
+    name               = "sfx_dash"
+    dashboard_group_id = signalfx_dashboard_group.mydashboardgroup0.id
+    dashboard_id       = signalfx_dashboard.mydashboard0.id
+  }
 }
 ```
 
@@ -32,19 +32,19 @@ resource "signalfx_data_link" "my_data_link" {
 
 ```
 resource "signalfx_data_link" "my_data_link_dash" {
-		context_dashboard_id = signalfx_dashboard.mydashboard0.id
-    property_name = "pname2"
-    property_value = "pvalue"
+  context_dashboard_id = signalfx_dashboard.mydashboard0.id
+  property_name        = "pname2"
+  property_value       = "pvalue"
 
-    target_external_url {
-			is_default = false
-      name = "ex_url"
-      time_format = "ISO8601"
-      url = "https://www.example.com"
-      property_key_mapping = {
-        foo = "bar"
-      }
+  target_external_url {
+    is_default  = false
+    name        = "ex_url"
+    time_format = "ISO8601"
+    url         = "https://www.example.com"
+    property_key_mapping = {
+      foo = "bar"
     }
+  }
 }
 ```
 
