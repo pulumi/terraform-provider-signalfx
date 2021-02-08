@@ -1,3 +1,17 @@
+## 6.5.0
+
+IMPROVEMENTS:
+* resource/signalfx_detector: Added tags argument. [#283](https://github.com/splunk-terraform/terraform-provider-signalfx/pull/283)
+
+BUFIXES:
+* data/signalfx_gcp_services: Fixed GCP data provider [#282](https://github.com/splunk-terraform/terraform-provider-signalfx/pull/282)
+
+## 6.4.0
+
+IMPROVEMENTS:
+* resource/list_chart: Added `timezone` argument to set Calendar Window Time Zone in the chart.
+* resource/heat_map_chart: Added `timezone` argument to set Calendar Window Time Zone in the chart.
+
 ## 6.3.0 (December 21, 2020)
 
 IMPROVEMENTS:
