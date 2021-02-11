@@ -1,3 +1,8 @@
+## 6.6.0
+
+IMPROVEMENTS:
+* resource/signalfx_detector: Added `TimeZone` argument. [#285](https://github.com/splunk-terraform/terraform-provider-signalfx/pull/285)
+
 ## 6.5.0
 
 IMPROVEMENTS:
